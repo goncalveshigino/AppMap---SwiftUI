@@ -37,4 +37,45 @@ extension MapView {
     }
 }
 
+// MARK: - Bottom Trailing Overlay View
+extension MapView {
+    var bottomTrailingOverlayView: some View {
+        HStack(spacing: -10) {
+            IconView(systemName: "sun.min.fill", imageColor: .yellow)
+                .offset(x: -10)
+            Text("140º")
+                .foregroundColor(.init(.gray))
+                .font(.title3)
+                .offset(x: -13)
+                
+        }.background(
+           RoundedRectangle(cornerRadius: 10)
+            .frame(width: 62, height: 46)
+            .foregroundColor(.init(.systemBackground))
+        ).offset(y: -100)
+    }
+}
+
+extension MapView {
+    var bottomLeadingOverlayView: some View {
+        HStack(spacing: -10) {
+            IconView(systemName: "binoculars.fill", imageColor: .yellow)
+                .frame(width: 62, height: 46)
+                .offset(x: -100)
+                .onTapGesture {
+                    Task {
+                        guard let coordinate = viewModel.viewingRegion?.center else {
+                            showErrorAlert = true
+                            return
+                        }
+                        
+                        await viewModel.fetchLookAroundPreview(coordinate: coordinate)
+                        viewModel.isLoading = false
+                    }
+                }
+                
+        }
+    }
+}
+
 
